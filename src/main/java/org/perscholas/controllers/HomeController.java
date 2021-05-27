@@ -1,9 +1,21 @@
 package org.perscholas.controllers;
 
+import net.bytebuddy.implementation.bind.MethodDelegationBinder;
+import org.perscholas.models.Course;
+import org.perscholas.models.Student;
+import org.perscholas.services.CourseService;
+import org.perscholas.services.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.BootstrapRegistryInitializer;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+
+import javax.validation.Valid;
 
 @Controller
+@SessionAttributes({"student"})
 public class HomeController {
 
     private final StudentService studentService;
