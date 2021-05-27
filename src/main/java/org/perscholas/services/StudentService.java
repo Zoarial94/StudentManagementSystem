@@ -1,10 +1,27 @@
 package org.perscholas.services;
 
+import org.perscholas.dao.ICourseRepo;
+import org.perscholas.dao.IStudentRepo;
+import org.perscholas.models.Student;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
+@Service
 public class StudentService {
 
-    /*
+    private final IStudentRepo studentRepo;
+    private final ICourseRepo courseRepo;
+
+    public StudentService(IStudentRepo studentRepo, ICourseRepo courseRepo) {
+        this.studentRepo = studentRepo;
+        this.courseRepo = courseRepo;
+    }
+
+/*
             - add class annotations
             - add @Transactional on class or on each method
             - add crud methods

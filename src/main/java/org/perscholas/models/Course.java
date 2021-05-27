@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 
@@ -19,8 +18,7 @@ import java.io.Serializable;
 @Entity
 //Spring Boot
 @Component
-
-
+@Table
 public class Course implements Serializable {
     static final long serialVersionUID = 6381462249347345007L;
 
@@ -34,8 +32,7 @@ public class Course implements Serializable {
 
     //fields
     @Id
-    Long cId;
-
-
-
+    long id;
+    String name;
+    String instructor;
 }
