@@ -1,12 +1,11 @@
 package org.perscholas.controllers;
 
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
+
 import org.perscholas.models.Course;
 import org.perscholas.models.Student;
 import org.perscholas.services.CourseService;
 import org.perscholas.services.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.BootstrapRegistryInitializer;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -177,5 +176,7 @@ public class HomeController {
     public String getSession(){
     return "getsession";
     }
+
+
 
 }

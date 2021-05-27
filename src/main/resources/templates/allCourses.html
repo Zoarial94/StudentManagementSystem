@@ -42,10 +42,14 @@
 
 <th:block th:each= "course : ${allCourses}">
     <div class = "container">
-        <h3> Course Info </h3>
-        <span th:text = "${course.id}"></span>
-        <span th:text = "${course.name}"></span>
-        <span th:text = "${course.instructor}"></span>
+        <table>
+            <th><h3> Course Info </h3></th>
+            <tr>
+                <td>Id: <span th:text = "${course.id}"></span></td>
+                <td>Name: <span th:text = "${course.name}"> </span></td>
+                <td>Instructor: <span th:text = "${course.instructor}"></span></td>
+            </tr>
+        </table>
     </div>
 </th:block>
 
