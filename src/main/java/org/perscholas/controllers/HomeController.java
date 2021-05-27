@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 @Controller
 @SessionAttributes({"student"})
@@ -112,22 +116,61 @@ public class HomeController {
             return "redirect:/student/login";
         }
 
-        return "courseRegistration";
+        student = studentService.getStudentByEmail(student.getEmail());
+
+        List<Course> allCourses = courseService.getAllCourses();
+        ArrayList<Course> availableCourse = new ArrayList<>(allCourses.size());
+        List<Course> studentCourses = student.getCourses();
+
+        for(Course c : allCourses) {
+            if(!studentCourses.contains(c)) {
+                availableCourse.add(c);
+            }
+        }
+
+
+        model.addAttribute("availableCourses", availableCourse);
+
+        return "courseStudentSignup";
     }
 
 
     @PostMapping("/course/registerStudent")
-    public String courseRegisterStudent(
-            @ModelAttribute("student") @Valid Student student, BindingResult result, Model model) {
-        System.out.println(result.hasErrors());
-        if(result.hasErrors()) {
-            return "courseRegistration";
+    public String courseRegisterStudent(@SessionAttribute("student") Student student, @RequestParam Map<String, Long> allParams, Model model) {
 
-        }else{
-            //Student databaseStudent = studentServices.saveStudent(student);
-            //student.setCourses(student.getCourses().add(course));
-            return "studentConfirmation";
+        if(student.getEmail() == null) {
+            return "redirect:student";
         }
+
+        Student newKidInClass = studentService.getStudentByEmail(student.getEmail());
+
+        for(Map.Entry<String, Long> entry : allParams.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+            newKidInClass.getCourses().add(courseService.getCourseById(entry.getValue()).get());
+        }
+
+        studentService.saveStudent(newKidInClass);
+
+        return "redirect:student";
+    }
+
+    @PostMapping("/course/registerStudentAlt")
+    public String courseRegisterStudentAlt(@RequestParam(name = "email") String email,
+                                           @RequestParam(name = "courseID") long courseID)
+    {
+
+        if(courseService.getCourseById(courseID).isEmpty() || studentService.getStudentByEmail(email) == null)
+        {
+            return "redirect:/course/registerStudent";
+        }
+        Student newKidInClass = studentService.getStudentByEmail(email);
+
+        newKidInClass.getCourses().add(courseService.getCourseById(courseID).get());
+
+        studentService.saveStudent(newKidInClass);
+
+        return "redirect:/student";
+
     }
 
     @GetMapping("getsession")

@@ -39,6 +39,10 @@ public class StudentService {
         return studentRepo.getById(email);
     }
 
+    public Student getStudentByEmailWithCourses(String email) {
+        return studentRepo.findStudentByEmailWithCourses(email).orElse(null);
+    }
+
     public boolean validateStudent(Student student) {
         // If the optional is present, then the email and password match.
         return studentRepo.findStudentByEmailAndPassword(student.getEmail(), student.getPassword()).isPresent();
