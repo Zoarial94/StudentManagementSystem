@@ -35,6 +35,7 @@ public class HomeController {
         return new Student();
     }
 
+    // Course controllers
     @ModelAttribute("course")
     public Course course() {
         return new Course();
