@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org
+  http://www.ultraq.net.nz/thymeleaf/layout http://www.ultraq.net.nz/thymeleaf/layout
+  http://www.thymeleaf.org/thymeleaf-extras-springsecurity4 http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Student Management System</a>
+        <div sec:authorize="isAuthenticated()">
+            <a class="nav-link active" aria-current="page" th:href="@{/}">User: <span sec:authentication="name"></span> Privileges: <span sec:authentication="principal.authorities"></span></a>
+        </div>
+
+        <div sec:authorize="isAnonymous()">
+            <a class="nav-link" th:href="@{/login}">Login</a>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/}">Home</a></li>
+                    <li sec:authorize="hasRole('ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/student/register}">Register New Student</a></li>
+                    <li sec:authorize="hasRole('STUDENT')" class="nav-item"><a class="nav-link" th:href="@{/course/register}">Register To a Course</a></li>
+                    <li sec:authorize="hasAnyRole('ADMIN', 'DEAN')" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="@{/allStudents}">Show All Students</a></li>
+                            <li><a class="dropdown-item" th:href="@{/allCourses}">Show All Courses</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" th:href="@{#}">Get Student By Email</a></li>
+                            <li><a class="dropdown-item" th:href="@{#}">Get Student Courses</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

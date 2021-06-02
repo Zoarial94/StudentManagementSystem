@@ -42,8 +42,8 @@ public class Student implements Serializable {
     String email;
 
     @Length(min = 3, max = 25, message = "should be between {1} and {2}")
-    @NotBlank(message = "Please Enter a Name")
-    String name;
+    @NotBlank(message = "Please Enter a Username")
+    String username;
 
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message = "- at least 8 characters\n- must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number\n- Can contain special characters")
     String password;
@@ -55,16 +55,22 @@ public class Student implements Serializable {
     )
     List<Course> courses;
 
+    public Student(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Student)) return false;
         Student student = (Student) o;
-        return email.equals(student.email) && Objects.equals(name, student.name) && Objects.equals(password, student.password);
+        return email.equals(student.email) && Objects.equals(username, student.username) && Objects.equals(password, student.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, name, password);
+        return Objects.hash(email, username, password);
     }
 }

@@ -1,25 +1,25 @@
 package org.perscholas.services;
 
+import lombok.RequiredArgsConstructor;
 import org.perscholas.dao.ICourseRepo;
 import org.perscholas.dao.IStudentRepo;
 import org.perscholas.models.Student;
+import org.perscholas.security.AppSecurityConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class StudentService {
 
     private final IStudentRepo studentRepo;
     private final ICourseRepo courseRepo;
-
-    public StudentService(IStudentRepo studentRepo, ICourseRepo courseRepo) {
-        this.studentRepo = studentRepo;
-        this.courseRepo = courseRepo;
-    }
+    private final PasswordEncoder passwordEncoder;
 
 /*
             - add class annotations
@@ -32,6 +32,7 @@ public class StudentService {
     }
 
     public Student saveStudent(Student s) {
+        s.setPassword(passwordEncoder.encode(s.getPassword()));
         return studentRepo.save(s);
     }
 
@@ -39,8 +40,8 @@ public class StudentService {
         return studentRepo.getById(email);
     }
 
-    public Student getStudentByEmailWithCourses(String email) {
-        return studentRepo.findStudentByEmailWithCourses(email).orElse(null);
+    public Optional<Student> getStudentByEmailWithCourses(String email) {
+        return studentRepo.findStudentByEmailWithCourses(email);
     }
 
     public boolean validateStudent(Student student) {

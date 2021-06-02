@@ -20,9 +20,9 @@
 <div align="center">
 <form th:action="@{/student/register}" method="post" th:object="${student}">
     <label for="username">username:</label><br>
-    <input type="text" id="username"  th:field="*{name}" required/><br>
+    <input type="text" id="username"  th:field="*{username}" required/><br>
     <div>
-        <p class="error" th:each="error : ${#fields.errors('name')}" th:text="${error}"></p>
+        <p class="error" th:each="error : ${#fields.errors('username')}" th:text="${error}"></p>
     </div>
 
     <label for="email">email:</label><br>

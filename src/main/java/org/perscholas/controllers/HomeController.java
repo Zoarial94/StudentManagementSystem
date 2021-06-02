@@ -1,11 +1,14 @@
 package org.perscholas.controllers;
 
 
+import lombok.RequiredArgsConstructor;
 import org.perscholas.models.Course;
 import org.perscholas.models.Student;
 import org.perscholas.services.CourseService;
 import org.perscholas.services.StudentService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 
+@RequiredArgsConstructor
 @Controller
-@SessionAttributes({"student"})
 public class HomeController {
 
     private final StudentService studentService;
     private final CourseService courseService;
 
-    public HomeController(StudentService studentService, CourseService courseService) {
-        this.studentService = studentService;
-        this.courseService = courseService;
-    }
-
-
+    //Student Controllers
     @ModelAttribute("student")
     public Student student() {
         return new Student();
@@ -58,28 +56,45 @@ public class HomeController {
         return "template";
     }
 
+    //Accessible to everyone. The first page seen if not logged in.
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    //Seen if page is not accessible to user.
+    @GetMapping("/403")
+    public String forbidden() {
+        return "403";
+    }
+
+    //Accessible to DEAN and ADMIN Roles. READ Permission only.
+    @PreAuthorize("hasAnyRole('DEAN', 'ADMIN') and hasAuthority('READ')")
     @GetMapping("/allStudents")
     public String allStudents(Model model) {
         model.addAttribute("allStudents", studentService.getAllStudent());
         return "allStudents";
     }
 
+    //Accessible to everyone. READ Permission only.
+    @PreAuthorize("hasAuthority('READ')")
     @GetMapping("/allCourses")
     public String allCourses(Model model) {
         model.addAttribute("allCourses", courseService.getAllCourses());
         return "allCourses";
     }
 
-    @GetMapping("/student")
-    public String studentHome() {
-        return "studentConfirmation";
-    }
-
+    /*
+     *  Create a student.
+     *  (This includes the GET and POST function)
+     */
+    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
     @GetMapping("/student/register")
-    public String studentRegistration(@SessionAttribute("student") Student student){
+    public String studentRegistration(){
         return "studentRegistration";
     }
 
+    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
     @PostMapping("/student/register")
     public String studentRegister(@ModelAttribute("student") @Valid Student student, BindingResult result, Model model) {
         System.out.println(result.hasErrors());
@@ -89,15 +104,21 @@ public class HomeController {
         }else{
             Student databaseStudent = studentService.saveStudent(student);
             model.addAttribute("student", student);
-            return "redirect:/student";
+            return "studentConfirmation";
         }
     }
 
+    /*
+     *  Create a course
+     *  (This includes the GET and POST function)
+     */
+    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
     @GetMapping("/course/register")
     public String courseRegistration() {
         return "courseRegistration";
     }
 
+    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
     @PostMapping("/course/register")
     public String courseRegister(@ModelAttribute("course") @Valid Course course, BindingResult result, Model model) {
         System.out.println(result.hasErrors());
@@ -111,12 +132,12 @@ public class HomeController {
         }
     }
 
+
+    /*
+     *
+     */
     @GetMapping("/course/registerStudent")
     public String courseStudentRegistration(@SessionAttribute("student") Student student, Model model){
-
-        if(student.getEmail() == null) {
-            return "redirect:/student/login";
-        }
 
         student = studentService.getStudentByEmail(student.getEmail());
 

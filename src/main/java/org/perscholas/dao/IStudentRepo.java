@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface IStudentRepo extends JpaRepository<Student, String> {
     Optional<Student> findStudentByEmailAndPassword(String email, String password);
 
+    // This needs to be checked and tested
     @Query("Select DISTINCT s FROM Student s JOIN FETCH s.courses courses WHERE s.email = ?1")
     Optional<Student> findStudentByEmailWithCourses(String email);
 

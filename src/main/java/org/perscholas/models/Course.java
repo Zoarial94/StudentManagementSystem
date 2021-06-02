@@ -37,6 +37,11 @@ public class Course implements Serializable {
     String name;
     String instructor;
 
+    public Course(String name, long id) {
+        this.name = name;
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
