@@ -45,11 +45,13 @@ public class HomeController {
             - provide as much as possible e.g. get/post/put/delete mappings
      */
 
+    //Accessible to everyone. Redirects to Template
     @GetMapping("/")
     public String home() {
         return "redirect:template";
     }
 
+    //Accessible to everyone. Directs to Template
     @GetMapping("/template")
     public String template(){
         return "template";

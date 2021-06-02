@@ -17,4 +17,6 @@ public interface IStudentRepo extends JpaRepository<Student, String> {
 
     @Query("Select DISTINCT s FROM Student s JOIN FETCH s.courses courses WHERE s.email = ?1")
     Optional<Student> findStudentByEmailWithCourses(String email);
+
+    Optional<Student> findByUsername(String name);
 }
