@@ -3,13 +3,22 @@ package org.perscholas.services;
 import lombok.RequiredArgsConstructor;
 import org.perscholas.dao.ICourseRepo;
 import org.perscholas.dao.IStudentRepo;
+import org.perscholas.exceptions.FileStorageException;
 import org.perscholas.models.Student;
 import org.perscholas.security.AppSecurityConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 

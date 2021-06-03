@@ -47,6 +47,8 @@ public class Student implements Serializable {
 
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message = "- at least 8 characters\n- must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number\n- Can contain special characters")
     String password;
+    
+    String imagePath;
 
     // Create a table where each student can only but assigned to the course once.
     @ManyToMany
