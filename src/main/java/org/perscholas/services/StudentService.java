@@ -1,6 +1,7 @@
 package org.perscholas.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.perscholas.dao.ICourseRepo;
 import org.perscholas.dao.IStudentRepo;
 import org.perscholas.exceptions.FileStorageException;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Log
 public class StudentService {
 
     private final IStudentRepo studentRepo;
@@ -49,6 +51,12 @@ public class StudentService {
         return studentRepo.getById(email);
     }
 
+    public Optional<Student> findStudentByUsername(String username) {
+        return studentRepo.findByUsername(username);
+    }
+
+
+
     public Optional<Student> getStudentByEmailWithCourses(String email) {
         return studentRepo.findStudentByEmailWithCourses(email);
     }
@@ -65,6 +73,35 @@ public class StudentService {
 //            Student student = studentOptional.get();
 //
 //        }
+    }
+
+    @Value("${app.upload.dir:${user.home}}")
+    String uploadDir;
+
+    public void addImageToStudent(MultipartFile file, String email) {
+
+
+        var student = getStudentByEmail(email);
+        if(student == null) {
+            throw new RuntimeException("No student found.");
+        }
+
+        try {
+            //File extension
+            String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.'));
+            String path = uploadDir + File.separator + "studentImages" + File.separator + email + "-image" + ext;
+            // location
+            Path copyLocation = Paths.get(path);
+            log.info("File location: " + copyLocation.toString());
+            //Replaces file if it already exists
+            Files.copy(file.getInputStream(),copyLocation, StandardCopyOption.REPLACE_EXISTING);
+            student.setImagePath("fileupload" + File.separator + "studentImages" + File.separator + email + "-image" + ext);
+            saveStudent(student);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FileStorageException("Could not store file " + file.getOriginalFilename() + ". Please try again.");
+        }
+
     }
 
 }

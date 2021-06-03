@@ -4,10 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
@@ -19,6 +16,7 @@ import java.io.Serializable;
 @Component
 public class AuthGroup implements Serializable {
 
+    @Transient
     private final long serialVersionUID = 1L;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -36,7 +36,7 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public static PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(11);
+        return new BCryptPasswordEncoder(12);
     }
 
     //
@@ -68,7 +68,7 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
     //2
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/imgs/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/imgs/**", "/static/fileupload/**", "/static/fileupload/studentImages/**");
     }
 
 

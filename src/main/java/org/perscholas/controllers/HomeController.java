@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,12 @@ public class HomeController {
         return "403";
     }
 
+    @GetMapping("/student")
+    public String studentHome(Model model, Principal principal) {
+        model.addAttribute("student", studentService.findStudentByUsername(principal.getName()).get());
+        return "studentHome";
+    }
+
     //Accessible to DEAN and ADMIN Roles. READ Permission only.
     @PreAuthorize("hasAnyRole('DEAN', 'ADMIN') and hasAuthority('READ')")
     @GetMapping("/allStudents")
@@ -88,13 +95,13 @@ public class HomeController {
      *  Create a student.
      *  (This includes the GET and POST function)
      */
-    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('WRITE')")
     @GetMapping("/student/register")
     public String studentRegistration(){
         return "studentRegistration";
     }
 
-    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('WRITE')")
     @PostMapping("/student/register")
     public String studentRegister(@ModelAttribute("student") @Valid Student student, BindingResult result, Model model) {
         System.out.println(result.hasErrors());

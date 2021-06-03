@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org
+  http://www.ultraq.net.nz/thymeleaf/layout http://www.ultraq.net.nz/thymeleaf/layout
+  http://www.thymeleaf.org/thymeleaf-extras-springsecurity4 http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Bare - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../css/styles.css" rel="stylesheet" />
+</head>
+<body>
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Student Management System</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <div sec:authorize="isAuthenticated()">
+                        <a class="nav-link active" aria-current="page" th:href="@{/}">User: <span sec:authentication="name"></span> Privileges: <span sec:authentication="principal.authorities"></span></a>
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/student/registerstudent}">Register New Student</a></li>
+                <div sec:authorize="isAuthenticated()">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/courses/registercourse}">Register To a Course</a></li>
+                </div>
+
+                <div sec:authorize="isAnonymous()">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+                </div>
+
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="@{/console/getallstudent}">Show All Students</a></li>
+                            <li><a class="dropdown-item" th:href="@{#}">Show All Courses</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" th:href="@{/console/getstudentbyid}">Get Student By Email</a></li>
+                            <li><a class="dropdown-item" th:href="@{#}">Get Student Courses</a></li>
+                        </ul>
+                    </li>
+
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+                </div>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Page content-->
+<div class="container">
+    <div class="text-center mt-5">
+
+        <h1> Upload Image </h1>
+
+        <form th:action="@{/uploadfile}" method="post" enctype="multipart/form-data">
+
+            <input type="file" name="file" />
+            <input type="submit" name="SUBMIT" />
+
+        </form>
+
+        <div th:if="${message}">
+
+            <h2 th:text="${message}" />
+
+        </div>
+
+        <img th:src="${filename}" alt="your image uploaded" />
+
+
+    </div>
+    <div sec:authorize="isAuthenticated()" class="text-center mt-5">
+
+        <h1> Upload Image For Student</h1>
+
+        <form th:action="@{/uploadStudentPicture}" method="post" enctype="multipart/form-data">
+
+            <input type="file" name="file" />
+            <input type="submit" name="SUBMIT" />
+
+        </form>
+
+        <div th:if="${message}">
+
+            <h2 th:text="${message}" />
+
+        </div>
+
+
+
+    </div>
+</div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="../js/scripts.js"></script>
+</body>
+</html>
