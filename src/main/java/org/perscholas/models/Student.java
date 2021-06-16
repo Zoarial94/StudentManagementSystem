@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 //lombok
 @Data
@@ -24,8 +26,13 @@ import java.util.Objects;
 @Entity
 //springboot
 @Component
+@Slf4j
 public class Student implements Serializable {
     static final long serialVersionUID = 6381462249347345007L;
+
+
+
+
 
     /*
             note use annotation  '@ToString.Exclude' for Lists
@@ -36,7 +43,6 @@ public class Student implements Serializable {
      */
 
     //fields
-
     @Id
     @Email(regexp = "\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,4}\\b",message = "Invalid email address")
     String email;
