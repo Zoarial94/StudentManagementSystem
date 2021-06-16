@@ -2,6 +2,7 @@ package org.perscholas.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.perscholas.models.Student;
 import org.perscholas.services.FileService;
 import org.perscholas.services.StudentService;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.security.Principal;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class FileController {
@@ -25,6 +27,8 @@ public class FileController {
 
     @GetMapping("/uploadform")
     public String uploadForm(){
+
+        log.info("**** Accessing uploadform page ****");
         return "uploadform";
     }
 

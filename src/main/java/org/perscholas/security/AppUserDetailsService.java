@@ -1,5 +1,6 @@
 package org.perscholas.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.perscholas.dao.IAuthGroupRepo;
 import org.perscholas.models.Student;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +12,7 @@ import java.util.Optional;
 import org.perscholas.models.AuthGroup;
 import java.util.List;
 
-
+@Slf4j
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 
@@ -33,10 +34,12 @@ public class AppUserDetailsService implements UserDetailsService {
         Optional<Student> studentOptional = studentRepo.findByUsername(s);
 
         if(studentOptional.isEmpty()) {
+            log.info("Student does not exist");
             throw new UsernameNotFoundException("Cannot find " + s);
         }
 
         List<AuthGroup> authGroups = authGroup.findByaUsername(s);
+        log.info("Student found.");
         return new AppUserPrincipal(studentOptional.get(), authGroups);
     }
 
