@@ -66,6 +66,12 @@ public class HomeController {
     //Seen if page is not accessible to user.
     @GetMapping("/403")
     public String forbidden() {
+        var user = SecurityContextHolder.getContext().getAuthentication();
+        StringBuilder auths = new StringBuilder();
+        for(var auth : user.getAuthorities()) {
+            auths.append(auth.getAuthority()).append(", ");
+        }
+        log.error("**** " + user.getName() + " Attempted to Access Forbidden Page with authority " + auths + "****");
         return "403";
     }
 
