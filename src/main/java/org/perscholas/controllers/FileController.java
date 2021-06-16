@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.perscholas.models.Student;
 import org.perscholas.services.FileService;
 import org.perscholas.services.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,9 @@ public class FileController {
     }
 
     @PostMapping("/uploadfile")
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes){
+    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Principal principal){
+
+        log.info("User " + principal.getName() + " uploaded the file \"" + file.getOriginalFilename() + "\"");
 
         fileService.uploadFile(file);
         redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename());

@@ -32,17 +32,19 @@
 </form>
 </div>
 
-<div align="center">
-<form action="/course/registerStudent" method="post" >
-<th:block th:each="course : ${availableCourses}">
-    <div class = "container">
-        <input type="checkbox" th:id="${course.id}" th:name="${course.id}" th:value="${course.id}"></input>
-        <label th:text = "${course.name}" th:for="${course.id}"></label>
-    </div>
-</th:block>
-    <input type="submit" value="submit">
-</form>
+<!--<div align="center">-->
+<!--<form action="/course/registerStudent" method="post" >-->
+<!--<th:block th:each="course : ${availableCourses}">-->
+<!--    <div class = "container">-->
+<!--        <input type="checkbox" th:id="${course.id}" th:name="${course.id}" th:value="${course.id}"></input>-->
+<!--        <label th:text = "${course.name}" th:for="${course.id}"></label>-->
+<!--    </div>-->
+<!--</th:block>-->
+<!--    <input type="submit" value="submit">-->
+<!--</form>-->
 </div>
 
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

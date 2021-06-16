@@ -2,12 +2,14 @@ package org.perscholas.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.perscholas.models.Course;
 import org.perscholas.models.Student;
 import org.perscholas.services.CourseService;
 import org.perscholas.services.StudentService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,10 +21,12 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 public class HomeController {
 
     private final StudentService studentService;
@@ -110,11 +114,12 @@ public class HomeController {
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('WRITE')")
     @PostMapping("/student/register")
     public String studentRegister(@ModelAttribute("student") @Valid Student student, BindingResult result, Model model) {
-        System.out.println(result.hasErrors());
         if(result.hasErrors()) {
+            log.info("Student registration form is invalid");
             return "studentRegistration";
 
         }else{
+            log.info("Created student " + student.getEmail());
             Student databaseStudent = studentService.saveStudent(student);
             model.addAttribute("student", student);
             return "studentConfirmation";
@@ -125,20 +130,22 @@ public class HomeController {
      *  Create a course
      *  (This includes the GET and POST function)
      */
-    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('WRITE')")
     @GetMapping("/course/register")
     public String courseRegistration() {
         return "courseRegistration";
     }
 
-    @PreAuthorize("hasRole('Admin') and hasAuthority('WRITE')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('WRITE')")
     @PostMapping("/course/register")
     public String courseRegister(@ModelAttribute("course") @Valid Course course, BindingResult result, Model model) {
         System.out.println(result.hasErrors());
         if(result.hasErrors()) {
+            log.info("Course registration has errors");
             return "courseRegistration";
 
         }else{
+            log.info("Created course " + course.getName());
             System.out.println("Course ID: " + course.getId());
             Course newCourse = courseService.saveCourse(course);
             return "courseConfirmation";
@@ -149,46 +156,47 @@ public class HomeController {
     /*
      *
      */
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('WRITE')")
     @GetMapping("/course/registerStudent")
-    public String courseStudentRegistration(@SessionAttribute("student") Student student, Model model){
+    public String courseStudentRegistration(Model model){
 
-        student = studentService.getStudentByEmail(student.getEmail());
-
-        List<Course> allCourses = courseService.getAllCourses();
-        ArrayList<Course> availableCourse = new ArrayList<>(allCourses.size());
-        List<Course> studentCourses = student.getCourses();
-
-        for(Course c : allCourses) {
-            if(!studentCourses.contains(c)) {
-                availableCourse.add(c);
-            }
-        }
-
-
-        model.addAttribute("availableCourses", availableCourse);
+//        student = studentService.getStudentByEmail(student.getEmail());
+//
+//        List<Course> allCourses = courseService.getAllCourses();
+//        ArrayList<Course> availableCourse = new ArrayList<>(allCourses.size());
+//        List<Course> studentCourses = student.getCourses();
+//
+//        for(Course c : allCourses) {
+//            if(!studentCourses.contains(c)) {
+//                availableCourse.add(c);
+//            }
+//        }
+//
+//
+//        model.addAttribute("availableCourses", availableCourse);
 
         return "courseStudentSignup";
     }
 
 
-    @PostMapping("/course/registerStudent")
-    public String courseRegisterStudent(@SessionAttribute("student") Student student, @RequestParam Map<String, Long> allParams, Model model) {
-
-        if(student.getEmail() == null) {
-            return "redirect:student";
-        }
-
-        Student newKidInClass = studentService.getStudentByEmail(student.getEmail());
-
-        for(Map.Entry<String, Long> entry : allParams.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-            newKidInClass.getCourses().add(courseService.getCourseById(entry.getValue()).get());
-        }
-
-        studentService.saveStudent(newKidInClass);
-
-        return "redirect:student";
-    }
+//    @PostMapping("/course/registerStudent")
+//    public String courseRegisterStudent(@SessionAttribute("student") Student student, @RequestParam Map<String, Long> allParams, Model model) {
+//
+//        if(student.getEmail() == null) {
+//            return "redirect:student";
+//        }
+//
+//        Student newKidInClass = studentService.getStudentByEmail(student.getEmail());
+//
+//        for(Map.Entry<String, Long> entry : allParams.entrySet()) {
+//            System.out.println(entry.getKey() + " " + entry.getValue());
+//            newKidInClass.getCourses().add(courseService.getCourseById(entry.getValue()).get());
+//        }
+//
+//        studentService.saveStudent(newKidInClass);
+//
+//        return "redirect:student";
+//    }
 
     @PostMapping("/course/registerStudentAlt")
     public String courseRegisterStudentAlt(@RequestParam(name = "email") String email,

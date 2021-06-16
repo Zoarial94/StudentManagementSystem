@@ -1,6 +1,6 @@
 package org.perscholas;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.perscholas.dao.IAuthGroupRepo;
 import org.perscholas.dao.ICourseRepo;
 import org.perscholas.dao.IStudentRepo;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 
 @Component
-@Log
+@Slf4j
 @Transactional
 public class AppStartupRunner implements CommandLineRunner {
     ICourseRepo courseRepo;
@@ -40,15 +40,16 @@ public class AppStartupRunner implements CommandLineRunner {
         studentRepo.save(new Student("student_two", "student_two@gmail.com", pwEncoder.encode("password")));
         studentRepo.save(new Student("student_three", "student_three@gmail.com", pwEncoder.encode("password")));
         studentRepo.save(new Student("dean", "dean@example.com", pwEncoder.encode("password")));
+        log.info("**** End of Student sql statements ****");
 
-        log.info("**** End of sql statements ****");
         log.info("**** Start adding Courses sql statements ****");
         courseRepo.save(new Course("Java", 3));
         courseRepo.save(new Course("Database", 4));
         courseRepo.save(new Course("Spring Boot", 5));
         courseRepo.save(new Course("HTML & CSS", 6));
         courseRepo.save(new Course("JavaScript", 7));
-        log.info("**** End of sql statements ****");
+        log.info("**** End of Courses sql statements ****");
+
         log.info("**** Start adding AuthGroup sql statements ****");
         authGroupRepo.save(new AuthGroup("habboubi", "ROLE_ADMIN"));
         authGroupRepo.save(new AuthGroup("habboubi", "ROLE_USER"));
@@ -69,7 +70,7 @@ public class AppStartupRunner implements CommandLineRunner {
 
         authGroupRepo.save(new AuthGroup("dean", "ROLE_DEAN"));
         authGroupRepo.save(new AuthGroup("dean", "READ"));
-        log.info("**** End of sql statements ****");
+        log.info("**** End of AuthGroup sql statements ****");
 
     }
 }

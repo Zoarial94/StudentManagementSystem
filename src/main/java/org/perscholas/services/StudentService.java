@@ -2,6 +2,7 @@ package org.perscholas.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.perscholas.dao.ICourseRepo;
 import org.perscholas.dao.IStudentRepo;
 import org.perscholas.exceptions.FileStorageException;
@@ -25,7 +26,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-@Log
+@Slf4j
 public class StudentService {
 
     private final IStudentRepo studentRepo;
